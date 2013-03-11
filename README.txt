@@ -1,3 +1,14 @@
+This is a fork of the main planar repository at bitbucket.org/caseman/planar/
+and is part of a project at the University of Arizona. Our intentions with this
+fork are to:
+1. Ignore the c implementation and use only python instead as we need to be able
+to pickle
+2. Add some attributes and methods that we feel are missing
+3. Modify most methods that take Vec2s to allow them to take numpy arrays and
+operate quickly on them
+
+Included below for now is the original README on planar.
+
 Planar Overview
 ===============
 
