@@ -174,8 +174,11 @@ class Vec2(tuple):
         :rtype: length N ndarray of floats, or single float if
                 input is Vec2.
         """
-        ox, oy = np.array(points).T
-        return self[0] * ox + self[1] * oy
+        # ox, oy = np.array(points).T
+        # dots = self[0] * ox + self[1] * oy
+        dots2 = np.array(self).dot(points.T)
+        # np.testing.assert_allclose(dots,dots2)
+        return dots2
 
     def cross(self, other):
         """Compute the cross product with another vector.

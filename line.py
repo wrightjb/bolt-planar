@@ -180,7 +180,7 @@ class Line(_LinearGeometry):
         :rtype: length N ndarray of floats
         """
         points = np.array(points)
-        return self._normal.dot_points(points) - self.offset
+        return points.dot(self._normal) - self.offset
 
     def distance_to_line(self, line):
         if self.intersects(line):
@@ -721,6 +721,7 @@ class LineSegment(_LinearGeometry):
 
     def distance_to_points(self, points):
         """Like distance_to but takes a list or array of points."""
+        points = np.array(points)
         to_points = np.array(points) - self._anchor
         along = self.direction.dot_points(to_points)
         distances = np.zeros(len(points))
@@ -728,9 +729,9 @@ class LineSegment(_LinearGeometry):
         distances[behind] = np.sqrt(np.sum(to_points[behind,:]**2,axis=1))
         ahead = along > self.length
         distances[ahead] = \
-            np.sqrt(np.sum((to_points[ahead,:]-self.end)**2,axis=1))
+            np.sqrt(np.sum((points[ahead,:]-self.end)**2,axis=1))
         beside = np.logical_not(np.logical_or(behind,ahead))
-        distances[beside] = self._normal.dot_points(to_points[beside,:])
+        distances[beside] = np.abs(self._normal.dot_points(to_points[beside,:]))
         return distances
 
     def distance_to_line(self, line):
@@ -841,6 +842,9 @@ class LineSegment(_LinearGeometry):
         :param points: The points to project.
         :type point: list(Vec2), Nx2 ndarray
         """
+        if points.shape[0] == 0:
+            return points
+
         to_points = np.array(points) - self._anchor
         parallels = self.direction.project_points(to_points)
         along = self.direction.dot_points(parallels)

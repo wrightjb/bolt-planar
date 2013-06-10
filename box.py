@@ -216,9 +216,9 @@ class BoundingBox(object):
 
     def contains_points(self, points):
         """Like contains_point but takes a list or array of points."""
-        xs, ys = array(points)
-        return land(self._min.x <= xs < self._max.x,
-                    self._min.y < ys <= self._max.y)
+        xs, ys = array(points).T
+        return land( land(self._min.x <= xs, xs < self._max.x),
+                     land(self._min.y < ys, ys <= self._max.y) )
 
     def distance_to(self, point):
         """Return the distance between the given point and this box."""
@@ -314,10 +314,12 @@ class BoundingBox(object):
 
 
     def project(self,point):
-        raise NotImplementedError
+        #TODO implement box specific version
+        return self.to_polygon().project(point)
 
     def project_points(self,points):
-        raise NotImplementedError
+        #TODO implement box specific version
+        return self.to_polygon().project_points(points)
 
     def _distance_to_line_ray_or_segment(self, lros):
         min_dist = float('inf')
